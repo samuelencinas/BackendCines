@@ -2,7 +2,6 @@ import {Model} from 'objection';
 import Timeslot from './Timeslot.model.js';
 import Cinema  from './Cinema.model.js';
 import Movie from './Movie.model.js';
-import path, { dirname } from 'path';
 
 export default class ShowTiming extends Model {
     static tableName = 'show_timing';
