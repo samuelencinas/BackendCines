@@ -8,6 +8,6 @@ export const development = {
   connection: {
     database: 'cines',
     user: 'postgres',
-    password: 'SAMUSG980929',
+    password: 'root',
   }
 };

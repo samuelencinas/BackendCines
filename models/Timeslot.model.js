@@ -19,8 +19,6 @@ export default class Timeslot extends Model {
             }
         }
     };
-    static relationMappings = () => ({
-        
-    })
+
 }
 

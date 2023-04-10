@@ -27,12 +27,7 @@ export default class ShowTiming extends Model {
             }
         }
     };
-    static get relationMappings() {
-        import('./Cinema.model.js');
-        return {
-            
-        }
-    }
+
     static relationMappings = () => ({
         cinemas: {
             relation: Model.BelongsToOneRelation,
