@@ -71,7 +71,7 @@ app.post('/movies', (req, res) => {
 });
 
 // Endpoint: POST /cinemas --> Devuelve todos los cines
-app.get('/cinemas', (req, res) => {
+app.post('/cinemas', (req, res) => {
     if (!!req.body) {
         const consulta = Cinema.query().throwIfNotFound();
 
