@@ -115,11 +115,6 @@ app.post('/cinemas', (req, res) => {
     }
 })
 
-app.get('/test', (req, res) => {
-    Cinema.query().withGraphFetched('catalog').then(response => {
-        res.status(200).json(response);
-    });
-})
 // Definimos el puerto 3000 como puerto de escucha y un mensaje de confirmación cuando el servidor esté levantado
 app.listen(3000,() => {
     console.log(`Servidor escuchando en el puerto 3000`);
