@@ -79,10 +79,12 @@ app.post('/cinemas', (req, res) => {
         if (!!req.body.id) consulta.findById(req.body.id);
 
         // Filtrado por fechas
-        if (!!req.body.sessionBefore || !!req.body.sessionAfter) {
+        if (!!req.body.sessionBefore || !!req.body.sessionAfter || !!req.body.withMovie) {
             consulta.withGraphJoined('sessions');
             if (!!req.body.sessionBefore) consulta.where('sessions.day', '<=', req.body.sessionBefore);
             if (!!req.body.sessionAfter) consulta.where('sessions.day', '>=', req.body.sessionAfter);
+            if (!!req.body.withMovie) consulta.where('sessions.movie_id', '=', req.body.withMovie)
+            consulta.then(resp => res.status(200).json(resp)).catch(err => res.status(404).json("Error"));
         }
 
         // Con cartelera
