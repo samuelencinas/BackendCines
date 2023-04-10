@@ -23,7 +23,7 @@ Timeslot.knex(dbConnection);
 // Endpoint: POST /movies --> Devuelve todas las películas
 app.post('/movies', (req, res) => {
     const consulta = Movie.query().throwIfNotFound();
-    if (!!req.body) {
+    if (!!req.body && req.body !== {}) {
 
         // Filtrado por ID
         if (!!req.body.id) consulta.findById(req.body.id);
@@ -72,9 +72,8 @@ app.post('/movies', (req, res) => {
 
 // Endpoint: POST /cinemas --> Devuelve todos los cines
 app.post('/cinemas', (req, res) => {
-    if (!!req.body) {
-        const consulta = Cinema.query().throwIfNotFound();
-
+    const consulta = Cinema.query().throwIfNotFound();
+    if (!!req.body && req.body !== {}) {
         // Filtrado por ID
         if (!!req.body.id) consulta.findById(req.body.id);
 
@@ -84,7 +83,6 @@ app.post('/cinemas', (req, res) => {
             if (!!req.body.sessionBefore) consulta.where('sessions.day', '<=', req.body.sessionBefore);
             if (!!req.body.sessionAfter) consulta.where('sessions.day', '>=', req.body.sessionAfter);
             if (!!req.body.withMovie) consulta.where('sessions.movie_id', '=', req.body.withMovie)
-            consulta.then(resp => res.status(200).json(resp)).catch(err => res.status(404).json("Error"));
         }
 
         // Con cartelera
@@ -110,17 +108,17 @@ app.post('/cinemas', (req, res) => {
                     }
                 }));
                 res.status(200).json(finalObject);
-            })
+            }).catch(err => res.status(404).json("error"));
+        } else {
+            consulta.then(results => res.status(200).json(results)).catch(err => res.status(404).json("error"));
         }
-    } else {
-        Cinema.query().then(results => res.status(200).json(results));
-    }
-})
+    } else Cinema.query().then(results => res.status(200).json(results));
+});
 
 // Definimos el puerto 3000 como puerto de escucha y un mensaje de confirmación cuando el servidor esté levantado
 app.listen(3000,() => {
     console.log(`Servidor escuchando en el puerto 3000`);
-})
+});
 
 
 
