@@ -46,7 +46,7 @@ app.post("/register", (req, res) => {
           password: req.body.password,
         });
         await newUser.save();
-        res.send("User Created");
+        res.send('Usuario creado!');
       }
     });
   });
