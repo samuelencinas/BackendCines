@@ -20,6 +20,40 @@ Cinema.knex(dbConnection);
 ShowTiming.knex(dbConnection);
 Timeslot.knex(dbConnection);
 
+// Endpoint: POST /login --> Inicia sesión
+app.post("/login", (req, res, next) => {
+    passport.authenticate("local", (err, user, info) => {
+      if (err) throw err;
+      if (!user) res.send('No existe el usuario!');
+      else {
+        req.logIn(user, (err) => {
+          if (err) throw err;
+          res.send('Autenticación correcta');
+          console.log(req.user);
+        });
+      }
+    })(req, res, next);
+  });
+
+// Endpoint: POST /register --> Registra un usuario
+app.post("/register", (req, res) => {
+    User.findOne({ username: req.body.username }, async (err, doc) => {
+      if (err) throw err;
+      if (doc) res.send('El usuario ya existe!');
+      if (!doc) {
+        const newUser = new User({
+          username: req.body.username,
+          password: req.body.password,
+        });
+        await newUser.save();
+        res.send("User Created");
+      }
+    });
+  });
+
+// Endpoint: GET /user --> Devuelve info del usuario
+app.get("/user", (req, res) => res.send(req.user));
+
 // Endpoint: POST /movies --> Devuelve todas las películas
 app.post('/movies', (req, res) => {
     const consulta = Movie.query().throwIfNotFound();
