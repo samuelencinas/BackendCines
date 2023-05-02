@@ -49,7 +49,10 @@ User.knex(dbConnection);
  * Para más info del authenticate ver el archivo LocalStrategy.js
  */
 app.post('/login', passport.authenticate('local'), (req, res) => {
-    if (!!req.user) res.status(200).json({status: 'OK'})
+    if (!!req.user) {
+        res.cookie('session', req.user.id, { secure: true, signed: true, expires: new Date(Date.now() + 3600) });
+        res.status(200).json({status: 'OK'})
+    }
     else res.status(500).json({status: "Sesión no iniciada"});
 });
 
@@ -73,9 +76,10 @@ app.post("/register", (req, res) => {
                 user: req.body.user,
                 unsecurePassword: String(req.body.password)
             }).then(insertResult => {
-                debugger;
+                if (!!insertResult) res.status(200).json({status: 'OK'})
+                else res.status(500).json({status: 'Error'});
             }).catch(error => {
-                debugger;
+                res.status(500).json({status: 'error'});
             })
         }
 
