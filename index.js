@@ -14,8 +14,9 @@ import { strategyInit } from './lib/AuthStrategy.js';
 
 // Instanciamos Express y el middleware de JSON y CORS
 const app = express();
+app.use(express.urlencoded({extended: false}))
 app.use(express.json());
-app.use(cors());
+app.use(cors({credentials: true, origin: 'http://localhost:3000'}));
 
 // Inicialización del sistema de sesiones (adelantando temario del siguiente lab)
 app.use(session({
@@ -23,10 +24,6 @@ app.use(session({
     name: 'SessionCookie.SID', // Nombre de la sesión
     resave: true,
     saveUninitialized: false,
-    cookie: {
-        secure: false,
-        maxAge: 3600000, // Expiración de la sesión
-    },
 }));
 app.use(passport.initialize()); // passport.initialize() inicializa Passport
 app.use(passport.session()); // passport.session() indica a Passport que usará sesiones
@@ -49,13 +46,9 @@ User.knex(dbConnection);
  * Para más info del authenticate ver el archivo LocalStrategy.js
  */
 app.post('/login', passport.authenticate('local'), (req, res) => {
-    if (!!req.user) {
-        res.cookie('session', req.user.id, { secure: true, signed: true, expires: new Date(Date.now() + 3600) });
-        res.status(200).json({status: 'OK'})
-    }
-    else res.status(500).json({status: "Sesión no iniciada"});
+    if (!!req.user) res.status(200).json(req.user) 
+    else res.status(500).json({error: "Credenciales incorrectas"});
 });
-
 
 
 /**
@@ -135,7 +128,7 @@ app.post('/movies', (req, res) => {
             
 
         })
-    } else Movie.query().then(results => res.status(200).json(results));
+    } else consulta.then(results => res.status(200).json(results));
 
 
 });

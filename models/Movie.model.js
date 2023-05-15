@@ -28,6 +28,10 @@ export default class Movie extends Model {
         }
     
     // Relaciones
+
+
+
+    
     static relationMappings = () => ({
         projections: {
             relation: Model.ManyToManyRelation,
